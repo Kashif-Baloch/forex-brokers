@@ -1,7 +1,7 @@
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
-import app from "./app";
+import app from "./app.js";
 import express from "express";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 const server = createServer(app);
 
 // Serve static files from dist/public in production
-// This logic is ONLY for when running the server directly (dev/prod), 
+// This logic is ONLY for when running the server directly (dev/prod),
 // NOT when running as a Vercel serverless function.
 const staticPath =
   process.env.NODE_ENV === "production"

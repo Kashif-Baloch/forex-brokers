@@ -107,6 +107,16 @@ export function registerRoutes(app: Express) {
   app.post("/api/contact", async (req, res) => {
     const { name, email, subject, message, website } = req.body;
 
+    console.log("Environment vars:", {
+      SMTP_HOST: process.env.SMTP_HOST,
+      SMTP_USER: process.env.SMTP_USER,
+      SMTP_TO_EMAIL: process.env.SMTP_TO_EMAIL,
+      SMTP_FROM_EMAIL: process.env.SMTP_FROM_EMAIL,
+      SMTP_PORT: process.env.SMTP_PORT,
+      SMTP_SECURE: process.env.SMTP_SECURE,
+      SMTP_PASS: process.env.SMTP_PASS,
+    });
+
     // Honeypot check
     if (website) {
       return res.json({ success: true, message: "Message received" });
@@ -121,10 +131,14 @@ export function registerRoutes(app: Express) {
 
     try {
       // Check if SMTP environment variables are set
-      if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
-        throw new Error('Missing SMTP configuration');
+      if (
+        !process.env.SMTP_HOST ||
+        !process.env.SMTP_USER ||
+        !process.env.SMTP_PASS
+      ) {
+        throw new Error("Missing SMTP configuration");
       }
-      
+
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT || "587"),
